@@ -32,8 +32,11 @@
 //= require spa-demo/geoloc/geocoder.service
 //= require spa-demo/geoloc/my_location.service
 // require spa-demo/geoloc/jhu_location.config
+//= require spa-demo/geoloc/search/search.service
 //= require spa-demo/geoloc/current_origin/current_origin.service
 //= require spa-demo/geoloc/current_origin/current_origin_selector.component
+//= require spa-demo/geoloc/search/search.component
+
 
 //= require spa-demo/layout/layout.module
 //= require spa-demo/layout/image_query_size.service

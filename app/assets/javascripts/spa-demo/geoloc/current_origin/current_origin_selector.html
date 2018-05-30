@@ -1,8 +1,8 @@
 <form name="select_origin"
-      class="navbar-form"      
+      class="navbar-form"
       ng-hide="$ctrl.getOriginAddress()">
       <input name="address-search"
-             type="text" 
+             type="text"
              placeholder="Address Search"
              ng-model="$ctrl.address"
              ng-required="true">
@@ -15,9 +15,10 @@
               ng-class="{'invalid' : $ctrl.myPositionError!=null }"
               ng-show="$ctrl.isCurrentLocationSupported()"
               ng-click="$ctrl.useCurrentLocation()">
-              {{ $ctrl.myPositionError==null ? 'My Position' : 'Position Unavail'}}                
+              {{ $ctrl.myPositionError==null ? 'My Position' : 'Position Unavail'}}
               </label>
-</form>
+
+            </form>
 
 <span class="search-criteria"
     ng-show="$ctrl.getOriginAddress()">
@@ -26,7 +27,7 @@
     <label>Origin: </label>
     <span class="current-origin">{{$ctrl.getOriginAddress()}}</span>
     <button title="change-origin"
-            type="submit" 
+            type="submit"
             class="btn btn-default"
             ng-click="$ctrl.clearOrigin()">Change</button>
   </form>
@@ -39,6 +40,6 @@
          step="1"
          ng-model="$ctrl.distanceLimit"
          ng-change="$ctrl.changeDistance()">
-  </form>          
-  
-</span>  
+  </form>
+
+</span>

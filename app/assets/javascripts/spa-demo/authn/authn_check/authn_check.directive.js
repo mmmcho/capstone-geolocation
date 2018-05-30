@@ -22,10 +22,10 @@
     }
   }
 
-  AuthnCheckController.$inject = ["$auth", 
-                                  "spa-demo.authn.whoAmI", 
+  AuthnCheckController.$inject = ["$auth",
+                                  "spa-demo.authn.whoAmI",
                                   "spa-demo.authn.checkMe"];
-  function AuthnCheckController($auth, whoAmI, checkMe) {
+  function AuthnCheckController($auth, whoAmI, checkMe, getSubjects) {
     var vm = this;
     vm.client = {}
     vm.server = {}

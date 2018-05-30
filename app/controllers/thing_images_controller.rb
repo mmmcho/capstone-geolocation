@@ -18,7 +18,7 @@ class ThingImagesController < ApplicationController
   def image_things
     authorize @image, :get_things?
     @thing_images=@image.thing_images.prioritized.with_name
-    render :index 
+    render :index
   end
 
   def linkable_things

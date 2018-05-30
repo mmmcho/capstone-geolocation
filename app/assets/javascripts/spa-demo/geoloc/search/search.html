@@ -1,0 +1,69 @@
+<div class="container">
+  <form name="select_origin">
+    <div class="row col-lg-12">
+      <label class="col-xs-3">Origin:</label>
+      <input name="address-search"
+             type="text"
+             placeholder="Address Search"
+             ng-model="$ctrl.address"
+             ng-required="true">
+      <button title="lookup-address"
+              class="btn btn-default"
+              ng-disabled="select_origin.$invalid"
+              ng-click="$ctrl.lookupAddress()">Lookup</button>
+      <span class="current-origin">{{$ctrl.getOriginAddress()}}</span>
+      <button title="change-origin"
+              type="submit"
+              class="btn btn-default"
+              ng-click="$ctrl.clearOrigin()">Change Origin</button>
+    </div>
+    <div class="col-xs-12">
+        <label class="col-xs-3">lng: </label>
+        <span>{{$ctrl.getPosition().lng}}</span>
+      </div>
+        <div class="col-xs-12">
+        <label class="col-xs-3">lat: </label>
+        <span>{{$ctrl.getPosition().lat}}</span>
+      </div>
+        <div class="col-xs-12">
+        <label class="col-xs-3">within miles: </label>
+        <input type="number"
+             name="distance-limit"
+             min="0"
+             step="1"
+             ng-model="$ctrl.distanceLimit"
+             ng-change="$ctrl.changeDistance()">
+      </div>
+        <div class="col-xs-12">
+        <button class="btn btn_default col-xs-offset-3"
+        ng-click="$ctrl.getItems()"
+        ng-disabled="select_origin.$invalid">Search</button>
+      </div>
+</form>
+</div>
+  <div class="image-list">
+  <form>
+    <div ng-show="$ctrl.items">
+      <h5>Search Results for images within
+        <span ng-show="$ctrl.distanceLimit">{{$ctrl.distanceLimit}}</span>
+        <span ng-show="!$ctrl.distanceLimit">unlimited</span> 
+        miles of {{$ctrl.getOriginAddress()}}.</h5>
+      <p>Check the checkbox to exclude the image in your search. {{$ctrl.selectedImages()}}
+        <button type="submit"
+              ng-click="$ctrl.clearCheckboxes()"
+              class="btn btn-default">Reset</button></p>
+
+      <ul>
+        <li ng-repeat="item in $ctrl.items">
+            <span><input type="checkbox"
+              ng-model="$ctrl.selectedList[item.id]"/></span>
+              <span class="image_id id">{{item.id}}</span>
+              <img style="width: 50px; height: 33px"
+                     ng-src="{{item.content_url}}?width=50"/>
+              {{item.caption}}
+              <span>({{item.distance}} miles from origin)</span>
+        </li>
+      </ul>
+  </div>
+  </form>
+</div>

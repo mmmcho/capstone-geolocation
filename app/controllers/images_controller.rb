@@ -2,7 +2,8 @@ class ImagesController < ApplicationController
   before_action :set_image, only: [:show, :update, :destroy, :content]
   wrap_parameters :image, include: ["caption", "position"]
   before_action :authenticate_user!, only: [:create, :update, :destroy]
-  after_action :verify_authorized, except: [:content]
+  before_action :origin, only: [:items]
+  after_action :verify_authorized, except: [:content, :items]
   after_action :verify_policy_scoped, only: [:index]
 
   rescue_from EXIFR::MalformedJPEG, with: :contents_error
@@ -12,7 +13,17 @@ class ImagesController < ApplicationController
     @images = policy_scope(Image.all)
     @images = ImagePolicy.merge(@images)
   end
-
+  def items
+      miles=params[:miles] ? params[:miles].to_f : nil
+      #@images=Image.within_range(@origin, miles)
+      #render :index
+      imagelist=params[:imagelist] ||= nil
+      distance=params[:distance] ||= "false"
+      reverse= miles ? params[:order] && params[:order].downcase=="desc" : nil #default to ASC
+      @images=Image.within_range(@origin, miles, reverse, imagelist)
+      @images=Image.with_distance(@origin, @images) if distance.downcase=="true"
+      render json: @images
+  end
   def show
     authorize @image
     images = policy_scope(Image.where(:id=>@image.id))
@@ -22,7 +33,7 @@ class ImagesController < ApplicationController
   def content
     result=ImageContent.image(@image).smallest(params[:width],params[:height]).first
     if result
-      expires_in 1.year, :public=>true 
+      expires_in 1.year, :public=>true
       if stale? result
         options = { type: result.content_type,
                     disposition: "inline",
@@ -43,7 +54,7 @@ class ImagesController < ApplicationController
       if @image.save
         original=ImageContent.new(image_content_params)
         contents=ImageContentCreator.new(@image, original).build_contents
-        if (contents.save!) 
+        if (contents.save!)
           role=current_user.add_role(Role::ORGANIZER, @image)
           @image.user_roles << role.role_name
           role.save!
@@ -96,11 +107,20 @@ class ImagesController < ApplicationController
       Rails.logger.debug exception
     end
 
-    def mongoid_validation_error(exception) 
+    def mongoid_validation_error(exception)
       payload = { errors:exception.record.errors.messages
-                     .slice(:content_type,:content,:full_messages) 
+                     .slice(:content_type,:content,:full_messages)
                      .merge(full_messages:["unable to create image contents"])}
       render :json=>payload, :status=>:unprocessable_entity
       Rails.logger.debug exception.message
+    end
+    def origin
+      case
+      when params[:lng] && params[:lat]
+        @origin=Point.new(params[:lng].to_f, params[:lat].to_f)
+      else
+        raise ActionController::ParameterMissing.new(
+          "an origin [lng/lat] required")
+      end
     end
 end
