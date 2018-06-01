@@ -46,7 +46,7 @@
     <div ng-show="$ctrl.items">
       <h5>Search Results for images within
         <span ng-show="$ctrl.distanceLimit">{{$ctrl.distanceLimit}}</span>
-        <span ng-show="!$ctrl.distanceLimit">unlimited</span> 
+        <span ng-show="!$ctrl.distanceLimit">unlimited</span>
         miles of {{$ctrl.getOriginAddress()}}.</h5>
       <p>Check the checkbox to exclude the image in your search. {{$ctrl.selectedImages()}}
         <button type="submit"
@@ -61,7 +61,7 @@
               <img style="width: 50px; height: 33px"
                      ng-src="{{item.content_url}}?width=50"/>
               {{item.caption}}
-              <span>({{item.distance}} miles from origin)</span>
+              <span>({{item.distance | number:1}} miles from origin)</span>
         </li>
       </ul>
   </div>
