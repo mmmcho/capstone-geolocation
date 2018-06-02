@@ -15,11 +15,11 @@ class ImagesController < ApplicationController
   end
   def items
       miles=params[:miles] ? params[:miles].to_f : nil
-      #@images=Image.within_range(@origin, miles)
-      #render :index
       imagelist=params[:imagelist] ||= nil
+      puts "Random text #{imagelist}"
       distance=params[:distance] ||= "false"
       reverse= miles ? params[:order] && params[:order].downcase=="desc" : nil #default to ASC
+
       @images=Image.within_range(@origin, miles, reverse, imagelist)
       @images=Image.with_distance(@origin, @images) if distance.downcase=="true"
       render json: @images

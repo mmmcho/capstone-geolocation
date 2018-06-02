@@ -23,7 +23,7 @@
       if (miles) {
         distance="true";
       }
-      return items.query({lat: lat, lng: lng, miles: miles, imagelist:imagelist, distance:distance, order:"asc"});
+      return items.query({lat: lat, lng: lng, miles: miles, 'imagelist[]':imagelist, distance:distance, order:"asc"});
     }
   }
 })();

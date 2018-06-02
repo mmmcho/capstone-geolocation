@@ -63,8 +63,10 @@
     }
     function getItems() {
       vm.items = null;
-      console.log("geting items", vm.getPosition().lng);
+      console.log("geting items", vm.selectedImages());
       search.getItems(vm.getPosition().lat, vm.getPosition().lng, vm.distanceLimit, vm.selectedImages()).$promise.then(
+      //search.getItems(vm.getPosition().lat, vm.getPosition().lng, vm.distanceLimit, vm.imagelist).$promise.then(
+
           function(value){
             vm.items=value;
             return value; },

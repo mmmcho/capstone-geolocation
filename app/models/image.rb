@@ -11,7 +11,7 @@ class Image < ActiveRecord::Base
               mapping: [%w(lng lng), %w(lat lat)]
 
   acts_as_mappable
-  scope :exclude_images, -> (imagelist) {where("id not in (?)", imagelist)}
+  scope :exclude_images, -> (imagelist) { where.not(:id=>imagelist) }
 
   scope :within_range, ->(origin, limit=nil, reverse=nil, imagelist=nil) {
     scope=Image.within(limit,:origin=>origin)                   if limit
