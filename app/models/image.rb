@@ -13,10 +13,10 @@ class Image < ActiveRecord::Base
   acts_as_mappable
   scope :exclude_images, -> (imagelist) { where.not(:id=>imagelist) }
 
-  scope :within_range, ->(origin, limit=nil, reverse=nil, imagelist=nil) {
+  scope :within_range, ->(origin, limit=nil, reverse=nil) {
     scope=Image.within(limit,:origin=>origin)                   if limit
     scope=scope.by_distance(:origin=>origin, :reverse=>reverse) unless reverse.nil?
-    scope=scope.exclude_images(imagelist) if imagelist
+    #scope=scope.exclude_images(imagelist) if imagelist
     return scope
   }
 
@@ -29,7 +29,7 @@ class Image < ActiveRecord::Base
   end
 
   def self.with_distance(origin, scope)
-    scope.select("-1.0 as distance, *")
+    scope.select("-1.0 as distance")
          .each {|i| i.distance = i.distance_from(origin) }
   end
 end

@@ -10,10 +10,27 @@ class ImagesController < ApplicationController
 
   def index
     authorize Image
-    @images = policy_scope(Image.all)
+
+    miles=params[:miles] ? params[:miles].to_f : nil
+    origin=params[:lng] && params[:lat] ? Point.new(params[:lng].to_f, params[:lat].to_f) : nil
+    imagelist=params[:imagelist] ||= nil
+    distance=params[:distance] ||= "false"
+    reverse= miles ? params[:order] && params[:order].downcase=="desc" : nil #default to ASC
+
+    scope = Image.all
+
+    scope=scope.within_range(origin, miles, reverse) if origin
+
+    scope=scope.exclude_images(imagelist) if imagelist
+
+    @images = policy_scope(scope)
+    @images = Image.with_distance(origin, @images) if distance.downcase=="true"
     @images = ImagePolicy.merge(@images)
+
   end
   def items
+
+
       miles=params[:miles] ? params[:miles].to_f : nil
       imagelist=params[:imagelist] ||= nil
       puts "Random text #{imagelist}"
@@ -22,6 +39,8 @@ class ImagesController < ApplicationController
 
       @images=Image.within_range(@origin, miles, reverse, imagelist)
       @images=Image.with_distance(@origin, @images) if distance.downcase=="true"
+
+
       render json: @images
   end
   def show
